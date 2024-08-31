@@ -1,16 +1,42 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Flasky{% endblock %}
+{% block title %}Avaliação Semestral{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
-    {% if not known %}
-    <p>Pleased to meet you!</p>
-    {% else %}
-    <p>Happy to see you again!</p>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <div class="alert-container">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
-</div>
+{% endwith %}
+
 {{ wtf.quick_form(form) }}
+
+<h2>Relação de professores cadastrados</h2>
+<h4>Quantidade: {{user_all|length}}</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Professores</th>
+            <th>Disciplinas</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for key in user_all %}
+        <tr>
+            <td>{{ key.username }}</td>
+            <td>{{ key.role.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}
